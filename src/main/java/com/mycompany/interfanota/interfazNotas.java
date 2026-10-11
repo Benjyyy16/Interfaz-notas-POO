@@ -312,57 +312,37 @@ public class interfazNotas extends javax.swing.JFrame {
 
     private void btn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_calcularActionPerformed
         // TODO add your handling code here:
-        double nota1 = Double.parseDouble(txt_nota1.getText());;
-        double nota2 = Double.parseDouble(txt_nota2.getText());;
-        double nota3 = Double.parseDouble(txt_nota3.getText());;
-        double nota4 = Double.parseDouble(txt_nota4.getText());;
-        
-        if (nota1 > 7) {
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
+        javax.swing.JTextField[] campos = {txt_nota1, txt_nota2, txt_nota3, txt_nota4};
+        double[] notas = new double[campos.length];
+        for (int i = 0; i < campos.length; i++) {
+            try {
+                notas[i] = CalculadoraNotas.parsearNota(campos[i].getText());
+            } catch (NumberFormatException e) {
+                marcarNotaInvalida(campos[i], "Ingrese un número válido en la nota " + (i + 1));
+                return;
+            }
+            if (!CalculadoraNotas.esNotaValida(notas[i])) {
+                marcarNotaInvalida(campos[i], "Las notas deben estar en un rango de 1 a 7");
+                return;
+            }
         }
-        else if (nota1 < 1){
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota2 > 7) {
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota2 < 1){
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota3 > 7) {
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota3 < 1){
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota4 > 7) {
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
-        }
-        else if (nota4 < 1){
-            lbl_comprobar.setText("Las notas deven estar en un rango de 1 a 7");
-            txt_nota1.setText("");
+        lbl_comprobar.setText("");
+
+        double promedio = CalculadoraNotas.promedio(notas);
+        txt_promedio.setText("" + promedio);
+        if (CalculadoraNotas.estaAprobado(promedio)) {
+            lbl_estado.setText("El alumno "+txt_nombre.getText()+" rut: "+txt_rut.getText()+ " esta aprobado");
         }
         else{
-            double suma;
-            double promedio;
-            suma= nota1 + nota2 + nota3+ nota4;
-            promedio = suma/4;
-            txt_promedio.setText(""+promedio);
-            if (promedio > 3.9) {
-                lbl_estado.setText("El alumno "+txt_nombre.getText()+" rut: "+txt_rut.getText()+ " esta aprobado");
-            }
-            else{
-                lbl_estado.setText("El alumno "+txt_nombre.getText()+" rut: "+txt_rut.getText()+ " esta reprobado");
-            }
+            lbl_estado.setText("El alumno "+txt_nombre.getText()+" rut: "+txt_rut.getText()+ " esta reprobado");
         }
     }//GEN-LAST:event_btn_calcularActionPerformed
+
+    private void marcarNotaInvalida(javax.swing.JTextField campo, String mensaje) {
+        lbl_comprobar.setText(mensaje);
+        campo.setText("");
+        campo.requestFocusInWindow();
+    }
 
     private void txt_nota1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_nota1ActionPerformed
         // TODO add your handling code here:
